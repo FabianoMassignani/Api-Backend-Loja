@@ -12,10 +12,10 @@ const schema = new Schema({
     preco: {
         type: Number,
         required: true
-    }},
+    }
+    },
     {
     timestamps: { createdAt: 'dataCadastro', updatedAt: 'dataAtualizacao' }
-    
     });
 
 module.exports = mongoose.model('Product', schema);

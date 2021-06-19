@@ -1,21 +1,26 @@
 'use string';
 
+//banco
 const mongoose = require('mongoose');
 const Product = mongoose.model('Product');
 
 const ValidationContract = require('../validators/validator');
 const repository = require('../Repositories/produto-repository');
 
-exports.get = (req, res, next) => {
-    repository.get()
-        .then(data => {
-                 res.status(200).send(data);
-        }).catch(e => {
-                 res.status(400).send(e);
-     });
+
+exports.get = async(req, res, next) => {
+    try{
+        var data = await repository.get();
+        res.status(200).send(data);
+    }catch (e){
+        res.status(500).send({
+            message: 'falha requisicao'
+        });
+
+    }
 };
 
-exports.post = (req, res, next) => {
+exports.post = async(req, res, next) => {
    
     let contract = new ValidationContract();
     contract.isRequired(req.body.descricao,'o produto deve ter um descricao');
@@ -27,48 +32,43 @@ exports.post = (req, res, next) => {
         return;
     }
 
-    repository.create(req.body)
-    .then(x => { 
-        res.status(201).send({message: 'produto cadastrado com sucesso'});
-    }).catch(e => {
-        res.status(400).send({message: 'falha cadastrado produto', data: e
-        });
-    });
+    try{
+        await repository.create(req.body);
+        res.status(201).send({
+            message: 'produto cadastrado com sucesso'}
+        );
+    }catch (e){
+            res.status(500).send({
+                message: 'falha requisicao'
+            });
+        }
     
 };
 
-exports.put = (req, res, next) => {
-    repository
-    .update(req.params.id, req.body)
-    .then(x => {
+exports.put = async(req, res, next) => {
+    try{
+        await repository.update(req.params.id, req.body);
         res.status(200).send({
             message: 'Produto atualizado'
-        });
+        });}
+    catch (e){
+            res.status(500).send({
+            message: 'falha requisicao'
+            });
+    }
      
-    }).catch(e => {
-        res.status(400).send({
-            message: 'Produto nao atualizado',
-            data: e
-        });
-     });
 };
 
-        
-    
-
-
-exports.delete = (req, res, next) => {
-    repository
-    .delete(req.body.id)
-    .then(x => {
+exports.delete = async(req, res, next) => {
+    try{await repository.delete(req.body.id);
         res.status(200).send({
-            message: 'Produto   deletado'
-        });
+            message: 'Produto deletado'
+        });}
+    catch (e){
+            res.status(500).send({
+            message: 'falha requisicao'
+            });
+    }
 
-    }).catch(e => {
-        res.status(400).send({
-            message: 'Produto nao deletado',
-            data: e
-        });
-     });
+     
 };

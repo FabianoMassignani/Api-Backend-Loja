@@ -1,25 +1,25 @@
 'use string';
 
+//banco
 const mongoose = require('mongoose');
 const Product = mongoose.model('Product');
 
-exports.get = () => {
-    return Product
+exports.get = async() => {
+    const res = await Product
         .find({}, 'descricao preco')
+    return res;
 }
 
-
-exports.create = (data) => {
+exports.create = async(data) => {
 
     var product = new Product(data); 
-    return product.save();
+    await product.save();
 
 } 
 
+exports.update = async(id, data) => {
 
-exports.update = (id, data) => {
-
-    return Product.findOneAndUpdate(id, {
+    await Product.findOneAndUpdate(id, {
         $set: {
             descricao: data.descricao,
             preco: data.preco
@@ -30,10 +30,9 @@ exports.update = (id, data) => {
 
 }
 
+exports.delete = async(id) => {
 
-exports.delete = (id) => {
-
-    return Product
+    await Product
     .findOneAndRemove(id)
 
 }
