@@ -17,14 +17,40 @@ exports.post = (req, res, next) => {
 };
 
 exports.put = (req, res, next) => {
-    const id = req.params.id;
-    res.status(200).send({
-        
-        id: id,
-        item: req.body
-    });
+    Product.findOneAndUpdate(req.params.id, {
+        $set: {
+            descricao: req.body.descricao,
+            preco: req.body.preco
+
+        }
+    }).then(x => {
+        res.status(200).send({
+            message: 'Produto atualizado'
+        });
+     
+    }).catch(e => {
+        res.status(400).send({
+            message: 'Produto nao atualizado',
+            data: e
+        });
+     });
 };
 
+        
+    
+
+
 exports.delete = (req, res, next) => {
-    res.status(201).send(req.body);
+    Product.findOneAndRemove(req.body.id).
+    then(x => {
+        res.status(200).send({
+            message: 'Produto   deletado'
+        });
+
+    }).catch(e => {
+        res.status(400).send({
+            message: 'Produto nao deletado',
+            data: e
+        });
+     });
 };
