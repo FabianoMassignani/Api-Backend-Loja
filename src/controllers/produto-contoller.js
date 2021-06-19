@@ -3,11 +3,32 @@
 const mongoose = require('mongoose');
 const Product = mongoose.model('Product');
 
+const ValidationContract = require('../validators/validator');
+const repository = require('../Repositories/produto-repository');
 
+exports.get = (req, res, next) => {
+    repository.get()
+        .then(data => {
+                 res.status(200).send(data);
+        }).catch(e => {
+                 res.status(400).send(e);
+     });
+};
 
 exports.post = (req, res, next) => {
-    var product = new Product(req.body); 
-    product.save().then(x => { 
+   
+    let contract = new ValidationContract();
+    contract.isRequired(req.body.descricao,'o produto deve ter um descricao');
+    contract.isRequired(req.body.preco,'o produto deve ter um preco ');
+
+    //se forem invalidos
+    if(!contract.isValid()){
+        res.status(400).send(contract.errors()).end();
+        return;
+    }
+
+    repository.create(req.body)
+    .then(x => { 
         res.status(201).send({message: 'produto cadastrado com sucesso'});
     }).catch(e => {
         res.status(400).send({message: 'falha cadastrado produto', data: e
@@ -17,13 +38,9 @@ exports.post = (req, res, next) => {
 };
 
 exports.put = (req, res, next) => {
-    Product.findOneAndUpdate(req.params.id, {
-        $set: {
-            descricao: req.body.descricao,
-            preco: req.body.preco
-
-        }
-    }).then(x => {
+    repository
+    .update(req.params.id, req.body)
+    .then(x => {
         res.status(200).send({
             message: 'Produto atualizado'
         });
@@ -41,8 +58,9 @@ exports.put = (req, res, next) => {
 
 
 exports.delete = (req, res, next) => {
-    Product.findOneAndRemove(req.body.id).
-    then(x => {
+    repository
+    .delete(req.body.id)
+    .then(x => {
         res.status(200).send({
             message: 'Produto   deletado'
         });
