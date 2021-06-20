@@ -19,10 +19,13 @@ mongoose.connection.on("open", function() {
 
 //modelos
 const Product = require('./Models/product');
+const Cliente = require('./Models/cliente');
+
 
 //rotas
 const index = require('./routes/index');
 const productRoute = require('./routes/produto-route');
+const clienteRoute = require('./routes/cliente-route');
 
 
 const bodyParser = require('body-parser');
@@ -33,7 +36,7 @@ app.use(bodyParser.urlencoded({
 
 
 app.use('/', index);
-app.use('/products', productRoute);
-
+app.use('/produtos', productRoute);
+app.use('/clientes', clienteRoute);
 
 module.exports = app;
