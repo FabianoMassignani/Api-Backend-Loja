@@ -9,6 +9,7 @@ const controlle = require('../controllers/pedido-contoller');
 
 router.get('/', controlle.get);
 router.post('/', controlle.post);
-
+router.put('/:id', controlle.put);
+router.delete('/', controlle.delete);
 
 module.exports = router;

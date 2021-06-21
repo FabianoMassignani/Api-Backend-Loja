@@ -34,3 +34,31 @@ exports.post = async(req, res, next) => {
         }
     
 };
+
+exports.put = async(req, res, next) => {
+    try{
+        await repository.update(req.params.id, req.body);
+        res.status(200).send({
+            message: 'Pedido atualizado'
+        });}
+    catch (e){
+            res.status(500).send({
+            message: 'falha a requisicao'
+        });
+    }
+    
+};
+
+exports.delete = async(req, res, next) => {
+    try{await repository.delete(req.body.id);
+        res.status(200).send({
+            message: 'Pedido deletado'
+        });}
+    catch (e){
+            res.status(500).send({
+            message: 'falha requisicao'
+            });
+    }
+
+     
+};
