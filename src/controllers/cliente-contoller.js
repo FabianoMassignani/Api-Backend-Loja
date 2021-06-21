@@ -5,6 +5,30 @@ const ValidationContract = require('../validators/validator');
 const repository = require('../Repositories/cliente-repository');
 
 
+exports.get = async(req, res, next) => {
+    try{
+        var data = await repository.get();
+        res.status(200).send(data);
+    }catch (e){
+        res.status(500).send({
+            message: 'Falha na requisicao'
+        });
+
+    }
+};
+
+exports.getByName = async(req, res, next) => {
+    try{
+        const data = await repository.getByName(req.params.nome);
+        res.status(200).send(data);
+    }catch (e){
+        res.status(500).send({
+            message: 'Falha na requisicao'
+        });
+
+    }
+};
+
 exports.post = async(req, res, next) => {
    
     let contract = new ValidationContract();
@@ -24,8 +48,38 @@ exports.post = async(req, res, next) => {
         );
     }catch (e){
             res.status(500).send({
-                message: 'falha requisicao'
+                message: 'Falha na requisicao'
             });
         }
     
 };
+
+exports.put = async(req, res, next) => {
+    try{
+        await repository.update(req.params.id, req.body);
+        res.status(200).send({
+            message: 'Cliente atualizado'
+        });}
+    catch (e){
+            res.status(500).send({
+            message: 'Falha na requisicao'
+            });
+    }
+     
+};
+
+exports.delete = async(req, res, next) => {
+    try{await repository.delete(req.body.id);
+        res.status(200).send({
+            message: 'Cliente deletado'
+        });}
+    catch (e){
+            res.status(500).send({
+            message: 'Falha na requisicao'
+            });
+    }
+
+     
+};
+
+

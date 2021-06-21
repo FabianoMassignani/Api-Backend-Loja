@@ -4,6 +4,7 @@
 const ValidationContract = require('../validators/validator');
 const repository = require('../Repositories/pedido-repository');
 
+
 exports.get = async(req, res, next) => {
     try{
         var data = await repository.get();

@@ -20,6 +20,18 @@ exports.get = async(req, res, next) => {
     }
 };
 
+exports.getByDescricao = async(req, res, next) => {
+    try{
+        const data = await repository.getByDescricao(req.params.descricao);
+        res.status(200).send(data);
+    }catch (e){
+        res.status(500).send({
+            message: 'Falha na requisicao'
+        });
+
+    }
+};
+
 exports.post = async(req, res, next) => {
    
     let contract = new ValidationContract();

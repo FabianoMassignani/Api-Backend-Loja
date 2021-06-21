@@ -8,6 +8,7 @@ const controlle = require('../controllers/produto-contoller');
 //rotas produtos
 
 router.get('/', controlle.get);
+router.get('/getByDescricao/:descricao', controlle.getByDescricao);
 router.post('/', controlle.post);
 router.put('/:id', controlle.put);
 router.delete('/', controlle.delete);

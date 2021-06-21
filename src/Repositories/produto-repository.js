@@ -10,6 +10,15 @@ exports.get = async() => {
     return res;
 }
 
+exports.getByDescricao = async(descricaoo) => {
+    const res = await Product
+    .find({
+        descricao: descricaoo
+
+    }, 'descricao preco')
+    return res;
+}
+
 exports.create = async(data) => {
     var product = new Product(data); 
     await product.save();
