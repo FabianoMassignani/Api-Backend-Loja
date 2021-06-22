@@ -6,7 +6,6 @@ const mongoose = require('mongoose');
 const Cliente = mongoose.model('Cliente');
 
 
-
 exports.get = async() => {
     const res = await Cliente
     .find({}, 'nome dataNascimento')

@@ -29,7 +29,6 @@ ValidationContract.prototype.isFixedLen = (value, len, message) => {
     errors.push({ message: message });
 }
 
- 
 ValidationContract.prototype.errors = () => { 
     return errors; 
 }

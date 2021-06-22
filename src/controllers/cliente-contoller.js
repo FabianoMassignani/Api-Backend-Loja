@@ -55,6 +55,17 @@ exports.post = async(req, res, next) => {
 };
 
 exports.put = async(req, res, next) => {
+
+    let contract = new ValidationContract();
+    contract.isRequired(req.body.nome,'o cliente deve ter um nome');
+    contract.isRequired(req.body.dataNascimento,'o cliente deve ter uma data de nascimento');
+
+    //se forem invalidos
+    if(!contract.isValid()){
+        res.status(400).send(contract.errors()).end();
+        return;
+    }
+
     try{
         await repository.update(req.params.id, req.body);
         res.status(200).send({

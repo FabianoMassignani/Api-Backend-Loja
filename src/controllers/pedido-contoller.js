@@ -19,6 +19,15 @@ exports.get = async(req, res, next) => {
 
 exports.post = async(req, res, next) => {
 
+    let contract = new ValidationContract();
+    contract.isRequired(req.body.produtos,'o pedido deve ter pelo menos um produto');
+
+    //se forem invalidos
+    if(!contract.isValid()){
+        res.status(400).send(contract.errors()).end();
+        return;
+    }
+
     try{
         await repository.create({
             cliente: req.body.cliente,
@@ -36,6 +45,16 @@ exports.post = async(req, res, next) => {
 };
 
 exports.put = async(req, res, next) => {
+
+    let contract = new ValidationContract();
+    contract.isRequired(req.body.produtos,'o pedido deve ter pelo menos um produto');
+
+    //se forem invalidos
+    if(!contract.isValid()){
+        res.status(400).send(contract.errors()).end();
+        return;
+    }
+
     try{
         await repository.update(req.params.id, req.body);
         res.status(200).send({
