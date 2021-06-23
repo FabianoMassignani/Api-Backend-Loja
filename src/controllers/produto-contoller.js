@@ -11,7 +11,7 @@ const repository = require('../Repositories/produto-repository');
 exports.get = async(req, res, next) => {
     try{
         var data = await repository.get();
-        res.status(200).send(data);
+        res.status(201).send(data);
     }catch (e){
         res.status(500).send({
             message: 'falha requisicao'
@@ -23,7 +23,7 @@ exports.get = async(req, res, next) => {
 exports.getByDescricao = async(req, res, next) => {
     try{
         const data = await repository.getByDescricao(req.params.descricao);
-        res.status(200).send(data);
+        res.status(201).send(data);
     }catch (e){
         res.status(500).send({
             message: 'Falha na requisicao'
@@ -35,7 +35,7 @@ exports.getByDescricao = async(req, res, next) => {
 exports.post = async(req, res, next) => {
    
     let contract = new ValidationContract();
-    contract.isRequired(req.body.descricao,'o produto deve ter um descricao');
+    contract.isRequired(req.body.descricao,'Descrição Produto é obrigatório');
     contract.isRequired(req.body.preco,'o produto deve ter um preco ');
 
     //se forem invalidos
@@ -60,6 +60,7 @@ exports.post = async(req, res, next) => {
 exports.put = async(req, res, next) => {
     
     let contract = new ValidationContract();
+    contract.isRequired(req.params.id,'Id não foi informado para alteracção');
     contract.isRequired(req.body.descricao,'o produto deve ter um descricao');
     contract.isRequired(req.body.preco,'o produto deve ter um preco ');
 
@@ -70,8 +71,8 @@ exports.put = async(req, res, next) => {
     }
     try{
         await repository.update(req.params.id, req.body);
-        res.status(200).send({
-            message: 'Produto atualizado'
+        res.status(201).send({
+            message: 'Produto '+req.body.descricao+' alterado com sucesso'
         });}
     catch (e){
             res.status(500).send({
@@ -83,7 +84,7 @@ exports.put = async(req, res, next) => {
 
 exports.delete = async(req, res, next) => {
     try{await repository.delete(req.body.id);
-        res.status(200).send({
+        res.status(201).send({
             message: 'Produto deletado'
         });}
     catch (e){

@@ -8,10 +8,10 @@ const repository = require('../Repositories/pedido-repository');
 exports.get = async(req, res, next) => {
     try{
         var data = await repository.get();
-        res.status(200).send(data);
+        res.status(201).send(data);
     }catch (e){
         res.status(500).send({
-            message: 'falha requisicao'
+            message: 'falha requisição'
         });
 
     }
@@ -47,6 +47,7 @@ exports.post = async(req, res, next) => {
 exports.put = async(req, res, next) => {
 
     let contract = new ValidationContract();
+    contract.isRequired(req.params.id,'Id não foi informado para alteracção');
     contract.isRequired(req.body.produtos,'o pedido deve ter pelo menos um produto');
 
     //se forem invalidos
@@ -57,7 +58,7 @@ exports.put = async(req, res, next) => {
 
     try{
         await repository.update(req.params.id, req.body);
-        res.status(200).send({
+        res.status(201).send({
             message: 'Pedido atualizado'
         });}
     catch (e){
@@ -70,7 +71,7 @@ exports.put = async(req, res, next) => {
 
 exports.delete = async(req, res, next) => {
     try{await repository.delete(req.body.id);
-        res.status(200).send({
+        res.status(201).send({
             message: 'Pedido deletado'
         });}
     catch (e){
