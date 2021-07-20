@@ -6,8 +6,8 @@ Projeto teste para novos colaboradores Backend da Atenas Software.
 
 Este projeto disponibiliza apenas os arquivos de teste:
 
-cliente.test
-produto.test
+cliente.test,
+produto.test,
 pedido.test
 
 Baseado na regra de negócio exigida pelo teste é necessário implementar:
@@ -19,6 +19,9 @@ O Model Pedido com os atributos: cliente, dataCadastro e dataAtualizacao e produ
 As Routes cliente-route, produto-route e pedido-route com as rotas de cada modelo.
 Os Controllers cliente-contoller, produto-contoller e pedido-contoller com as regras de negócio e validação das rotas.
 Os Repositories cliente-repository, produto-repository e pedido-repository que serão utilizados pelos controllers para persitir e buscar os dados no banco de dados.
+
+
+
 Áreas de conhecimento
 
 
