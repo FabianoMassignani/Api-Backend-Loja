@@ -7,8 +7,11 @@ const repository = require('../Repositories/pedido-repository');
 
 exports.get = async(req, res, next) => {
     try{
-        var data = await repository.get();
-        res.status(201).send(data);
+        const data = await repository.get();
+        res.status(200).send({
+            message: 'Sucesso',
+            lista: data
+        });
     }catch (e){
         res.status(500).send({
             message: 'falha requisição'
@@ -19,22 +22,23 @@ exports.get = async(req, res, next) => {
 
 exports.post = async(req, res, next) => {
 
-    let contract = new ValidationContract();
-    contract.isRequired(req.body.produtos,'o pedido deve ter pelo menos um produto');
-
-    //se forem invalidos
-    if(!contract.isValid()){
-        res.status(400).send(contract.errors()).end();
+    if(!req.body.cliente){
+        res.status(401).send({ message: 'Cliente é obrigatório' }).end();
         return;
     }
 
     try{
-        await repository.create({
+        const data = await repository.create({
             cliente: req.body.cliente,
             produtos: req.body.produtos
         });
+        
         res.status(201).send({
-            message: 'Pedido cadastrado com sucesso'}
+            retorno:{
+                cliente: req.body.cliente,
+                produtos: req.body.produtos,
+                _id: data._id
+            }}
         );
     }catch (e){
             res.status(500).send({
@@ -46,21 +50,15 @@ exports.post = async(req, res, next) => {
 
 exports.put = async(req, res, next) => {
 
-    let contract = new ValidationContract();
-    contract.isRequired(req.params.id,'Id não foi informado para alteracção');
-    contract.isRequired(req.body.produtos,'o pedido deve ter pelo menos um produto');
-
-    //se forem invalidos
-    if(!contract.isValid()){
-        res.status(400).send(contract.errors()).end();
-        return;
-    }
-
     try{
-        await repository.update(req.params.id, req.body);
-        res.status(201).send({
-            message: 'Pedido atualizado'
-        });}
+       const data = await repository.update(req.body._id, req.body);
+        res.status(200).send({
+            retorno:{
+                dataAtualizacao: data.dataAtualizacao,
+                cliente: req.body.cliente
+            }
+        });
+    }
     catch (e){
             res.status(500).send({
             message: 'falha a requisicao'

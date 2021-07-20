@@ -19,8 +19,10 @@ exports.get = async(req, res, next) => {
 
 exports.getByName = async(req, res, next) => {
     try{
-        const data = await repository.getByName(req.params.nome);
-        res.status(201).send(data);
+        const data = await repository.getByName(req.query.nome);
+        res.status(200).send({
+            nome: req.query.nome
+        });
     }catch (e){
         res.status(500).send({
             message: 'Falha na requisicao'
@@ -29,22 +31,33 @@ exports.getByName = async(req, res, next) => {
     }
 };
 
+exports.getAll = async(req, res, next) => {
+    try{
+        const data = await repository.getAll();
+        res.status(200).send(data);
+        
+    }catch (e){
+        res.status(500).send({
+            message: 'Falha na requisicao'
+        });
+    }
+};
+
 exports.post = async(req, res, next) => {
    
-    let contract = new ValidationContract();
-    contract.isRequired(req.body.nome,'Nome Cliente é obrigatório');
-    contract.isRequired(req.body.dataNascimento,'o cliente deve ter uma data de nascimento');
-
-    //se forem invalidos
-    if(!contract.isValid()){
-        res.status(400).send(contract.errors()).end();
+    if((req.body.nome)==''){
+        res.status(400).send({ message: 'Nome Cliente é obrigatório' }).end();
         return;
     }
 
     try{
-        await repository.create(req.body);
+        const data = await repository.create(req.body);
         res.status(201).send({
-            message: 'Cliente '+req.body.nome+' criado com sucesso'}
+                retorno:{
+                nome: req.body.nome,
+                dataNascimento: req.body.dataNascimento,
+                _id: data._id
+            }}
         );
     }catch (e){
             res.status(500).send({
@@ -56,21 +69,18 @@ exports.post = async(req, res, next) => {
 
 exports.put = async(req, res, next) => {
 
-    let contract = new ValidationContract();
-    contract.isRequired(req.params.id,'Id não foi informado para alteracção');
-    contract.isRequired(req.body.nome,'o cliente deve ter um nome');
-    contract.isRequired(req.body.dataNascimento,'o cliente deve ter uma data de nascimento');
-
-    //se forem invalidos
-    if(!contract.isValid()){
-        res.status(400).send(contract.errors()).end();
+    if(!req.body._id){
+        res.status(401).send({ message: 'Id não foi informado' }).end();
         return;
     }
-
     try{
-        await repository.update(req.params.id, req.body);
+       const data = await repository.update(req.body._id,req.body);
         res.status(200).send({
-            message: 'Cliente atualizado'
+            retorno:{
+                nome: req.body.nome,
+                dataNascimento: req.body.dataNascimento,
+                dataAtualizacao: data.dataAtualizacao
+        }
         });}
     catch (e){
             res.status(500).send({
@@ -81,8 +91,8 @@ exports.put = async(req, res, next) => {
 };
 
 exports.delete = async(req, res, next) => {
-    try{await repository.delete(req.body.id);
-        res.status(200).send({
+    try{await repository.delete(req.body._id);
+        res.status(201).send({
             message: 'Cliente deletado'
         });}
     catch (e){
