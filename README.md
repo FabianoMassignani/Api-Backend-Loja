@@ -6,9 +6,9 @@ Projeto teste para novos colaboradores Backend da Atenas Software.
 
 Este projeto disponibiliza apenas os arquivos de teste:
 
-cliente.test,
-produto.test,
-pedido.test
+cliente.test, /n
+produto.test, /n
+pedido.test /n
 
 Baseado na regra de negócio exigida pelo teste é necessário implementar:
 
